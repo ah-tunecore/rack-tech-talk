@@ -1,11 +1,12 @@
 class InternalApiMiddleware
-  def initialize(app)
-    @app = app
+  def initialize(app, routes)
+    @app    = app
+    @routes = routes
   end
 
   def call(env)
     request = Rack::Request.new(env)
-    if authorized_request?(request)
+    if protected_route?(request) && authorized_request?(request)
       status, headers, body = @app.call(env)
       encrypt_header(@decrypted_token, headers)
       [status, headers, body]
@@ -15,6 +16,10 @@ class InternalApiMiddleware
   end
 
   private
+
+  def protected_route?(request)
+    @routes.include?(request.path)
+  end
 
   def authorized_request?(request)
     @decrypted_token = "0987654321"

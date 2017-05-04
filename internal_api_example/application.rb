@@ -1,7 +1,8 @@
 ExampleApplication.configure do
-  config.middleware.use "InternalApiMiddleware"
+  internal_api_routes = ["/example"]
+  config.middleware.use "InternalApiMiddleware", internal_api_routes
   # OR
-  config.middleware.insert_before 0, "InternalApiMiddleware"
+  config.middleware.insert_before 0, "InternalApiMiddleware", internal_api_routes
   # OR
-  config.middleware.insert_after 10, "InternalApiMiddleware"
+  config.middleware.insert_after 10, "InternalApiMiddleware", internal_api_routes
 end
